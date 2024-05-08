@@ -91,6 +91,8 @@ jobs:
 
       - name: Clean runner
         run: |
-          rm -rf ./*    
+          shopt -s dotglob
+          rm -rf ./*
+          shopt -u dotglob
 
           
