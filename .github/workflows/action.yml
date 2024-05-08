@@ -43,7 +43,7 @@ jobs:
           
         run: |
           ls
-          echo "${{ matrix.project }}"
+          echo "${{ matrix.project }} index: ${{ matrix.job-index }}"
 
       - name: Pull request
         run: |
