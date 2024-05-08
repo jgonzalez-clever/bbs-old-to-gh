@@ -55,9 +55,10 @@ jobs:
             # Verificar el código de respuesta
             if [ "$response" -eq 200 ]; then
               echo "El repositorio jgonzalez-clevermig-test/${{ matrix.repository }} existe."
+              exit 1  # Salir con un código de error
             else
               echo "Error: El repositorio jgonzalez-clevermig-test/${{ matrix.repository }} no existe."
-              exit 1  # Salir con un código de error
+              
             fi
 
       #- name: Pull request
@@ -88,6 +89,10 @@ jobs:
           git remote add github "https://${{ secrets.GH_PAT }}@github.com/jgonzalez-clevermig-test/${{ matrix.repository }}.git"
           git push github --mirror
 
-          
+      - name: Clean runner
+        run: |
+          pwd
+          ls
+          # rm **      
 
           
