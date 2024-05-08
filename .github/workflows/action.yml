@@ -63,7 +63,7 @@ jobs:
         run: |
           # Guardar el índice de la línea agregada
           index=$(wc -l < ../repos-${{ github.run_number }}.csv)
-          echo "${{ env.ORGORIGEN }},{{ matrix.repository }},," >> ../repos-${{ github.run_number }}.csv
+          echo "${{ env.ORGORIGEN }},${{ matrix.repository }},," >> ../repos-${{ github.run_number }}.csv
           
       - name: Check if repository exists
         run: |
@@ -108,7 +108,7 @@ jobs:
           git push github --mirror
           if [ $? -eq 0 ]; then
             echo "Push successful"
-            sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Successful\//" ../repos-${{ github.run_number }}.csv
+            sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Successful\//" ../../repos-${{ github.run_number }}.csv
             exit 0
           else
             echo "Push failed"
@@ -133,7 +133,7 @@ jobs:
           -d "{\"default_branch\": \"${default_branch}\"}" "https://api.github.com/repos/${{ env.ORGTARGET }}/${{ matrix.repository }}")
 
           # Update report
-          sed -i "${index} s/^\(\([^,]*,\)\{2\}\)[^,]*/\1${default_branch}\//" ../repos-${{ github.run_number }}.csv
+          sed -i "${index} s/^\(\([^,]*,\)\{2\}\)[^,]*/\1${default_branch}\//" ../../repos-${{ github.run_number }}.csv
       
       - name: Clean runner
         run: |
