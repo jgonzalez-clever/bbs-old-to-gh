@@ -45,6 +45,8 @@ jobs:
           BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
           BBS_TOKEN: ${{ secrets.BBS_TOKEN }}
           OWNER: ${{ needs.Get-Repositories-to-Migrate.outputs.OWNER }}
+        run:
+          echo "${{ env.OWNER }}"
           
       - name: Check if repository exists
         run: |
