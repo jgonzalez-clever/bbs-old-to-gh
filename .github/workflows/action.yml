@@ -1,0 +1,46 @@
+name: BitBucket Server Migration Tool Windows
+on:
+  workflow_dispatch:
+  
+jobs: 
+  Get-Repositories-to-Migrate:
+    # Specifies the operating system environment on which the workflow will run.
+    # In this case, it is set to "ubuntu-latest", which indicates the latest version of Ubuntu.
+    runs-on: ubuntu-latest
+ 
+    # CONFIGURE PROJECT MATRIX
+    outputs:
+      # SET PROJECTS OUTPUT FROM SET-MATRIX STEP
+      PROJECTS: ${{ steps.set-matrix.outputs.PROJECTS }}
+    
+    steps:
+      - name: Checkout to repository
+        uses: actions/checkout@v3
+     
+      - name: Set matrix data
+        id: set-matrix
+        # STORE PROJECTS.JSON INTO PROJECTS VARIABLE
+        run: echo "PROJECTS=$(jq -c . < ./projects.json)" >> $GITHUB_OUTPUT
+        
+  Migration:
+    runs-on: [ 'self-hosted' , 'Linux' , 'X64' ]
+    needs: Get-Repositories-to-Migrate
+    strategy:
+      max-parallel: 1
+      # SET MATRIX WITH PROJECTS TO MIGRATE
+      matrix: ${{ fromJson(needs.Get-Repositories-to-Migrate.outputs.PROJECTS) }}
+      
+    steps:
+      - name: Checkout to repository
+        uses: actions/checkout@v3
+              
+      - name: Migration
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          BBS_USERNAME: ${{ secrets.BBS_USERNAME }}
+          BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          PATH_WORK: ${{ vars.PATH_WORK }}
+        
+        run: |
+          ls
