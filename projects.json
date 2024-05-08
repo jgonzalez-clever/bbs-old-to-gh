@@ -1,20 +1,10 @@
 {
     "include": [
     {
-        "project": "PROJ1",
+        "project": "project-test",
         "migrate": [
             {
-                "repositories": "repo1",
-                "repositories": "repo2"
-            }
-        ]
-    },
-    {
-        "project": "PROJ2",
-        "migrate": [
-            {
-                "repositories": "repo1.1",
-                "repositories": "repo2.1"
+                "repositories": "repo-test"
             }
         ]
     }
