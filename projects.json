@@ -1,12 +1,8 @@
 {
-    "include": [
-    {
-        "project": "project-test",
-        "migrate": [
-            {
-                "repositories": "repo-test"
-            }
-        ]
-    }
+    "owner" : "jgonzalez-clever",
+    "repositories": [ 
+      {
+        "repo_name": "repo-test"
+      }
     ]
 }
