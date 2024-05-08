@@ -40,25 +40,23 @@ jobs:
       # SET MATRIX WITH PROJECTS TO MIGRATE
       matrix:
         repository: ${{fromJson(needs.Get-Repositories-to-Migrate.outputs.REPOSITORIES)}}
-      
+    env:
+      GH_PAT: ${{ secrets.GH_PAT }}
+      BBS_USERNAME: ${{ secrets.BBS_USERNAME }}
+      BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
+      BBS_TOKEN: ${{ secrets.BBS_TOKEN }}
+      OWNER: ${{ needs.Get-Repositories-to-Migrate.outputs.OWNER }}
+      ORGTARGET: ${{ needs.Get-Repositories-to-Migrate.outputs.ORGTARGET }}
     steps:
       - name: Checkout to repository
         uses: actions/checkout@v3
               
       - name: Migration
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-          BBS_USERNAME: ${{ secrets.BBS_USERNAME }}
-          BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
-          BBS_TOKEN: ${{ secrets.BBS_TOKEN }}
-          OWNER: ${{ needs.Get-Repositories-to-Migrate.outputs.OWNER }}
-          ORGTARGET: ${{ needs.Get-Repositories-to-Migrate.outputs.ORGTARGET }}
+
         run:
           echo "${{ env.OWNER }} to ${{ env.ORGTARGET }}"
           
       - name: Check if repository exists
-        env:
-          ORGTARGET: ${{ needs.Get-Repositories-to-Migrate.outputs.ORGTARGET }}
         run: |
           response=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.GH_PAT }}" "https://api.github.com/repos/${{ env.ORGTARGET }}/${{ matrix.repository }}")
 
@@ -84,8 +82,6 @@ jobs:
           git clone http://${{ secrets.BBS_USERNAME }}:${{ secrets.BBS_PASSWORD }}@localhost:7990/scm/proj/${{ matrix.repository }}.git --mirror
 
       - name: Crate repository on Github
-        env:
-          ORGTARGET: ${{ needs.Get-Repositories-to-Migrate.outputs.ORGTARGET }}
         run: |
           curl -L \
             -X POST \
@@ -96,8 +92,6 @@ jobs:
             -d '{"name":"${{ matrix.repository }}","private":true}'
 
       - name: Push repository to Github
-        env:
-          ORGTARGET: ${{ needs.Get-Repositories-to-Migrate.outputs.ORGTARGET }}
         run: |
           cd ${{ matrix.repository }}.git
           git remote add github "https://${{ secrets.GH_PAT }}@github.com/${{ env.ORGTARGET }}/${{ matrix.repository }}.git"
