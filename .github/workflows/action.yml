@@ -22,7 +22,7 @@ jobs:
           id: set-owner
           run: |
             echo "OW=$(jq -r '.owner' repositories.json)" >> $GITHUB_OUTPUT 
-            echo "$OWNER"
+            echo "$OW"
         
   Migration:
     runs-on: [ 'self-hosted' , 'Linux' , 'X64' ]
