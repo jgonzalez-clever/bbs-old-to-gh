@@ -3,6 +3,9 @@
     "repositories": [ 
       {
         "repo_name": "repo-test"
+      },
+      {
+        "repo_name": "repo-test2"
       }
     ]
 }
