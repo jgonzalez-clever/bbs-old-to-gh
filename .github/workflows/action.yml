@@ -77,7 +77,7 @@ jobs:
       #    -H 'Authorization: Bearer ${{ secrets.BBS_TOKEN }}' \
       #    -o bbs_pullrequest.json
           
-      - name: Clone BitBucket Repository {{ item.bbs_repository_name }}
+      - name: Clone BitBucket Repository ${{ matrix.repository }}
         run: |
           git clone http://${{ secrets.BBS_USERNAME }}:${{ secrets.BBS_PASSWORD }}@localhost:7990/scm/${{ env.ORGORIGEN }}/${{ matrix.repository }}.git --mirror
 
