@@ -15,12 +15,14 @@ jobs:
        
         - name: Set matrix data
           id: set-matrix
-          run: echo "REPO=$(jq -c -r '.repositories | map(.repo_name)' < ./repositories.json)" >> $GITHUB_OUTPUT 
-
+          run: |
+            echo "REPO=$(jq -c -r '.repositories | map(.repo_name)' < ./repositories.json)" >> $GITHUB_OUTPUT 
+            echo "$REPO"
         - name: Set owner
           id: set-owner
-          run: echo "OW=$(jq -r '.owner' repositories.json)" >> $GITHUB_OUTPUT 
-
+          run: |
+            echo "OW=$(jq -r '.owner' repositories.json)" >> $GITHUB_OUTPUT 
+            echo "$OWNER"
         
   Migration:
     runs-on: [ 'self-hosted' , 'Linux' , 'X64' ]
