@@ -61,7 +61,7 @@ jobs:
       - name: Clone BitBucket Repository {{ item.bbs_repository_name }}
         run: |
           git clone http://${{ secrets.BBS_USERNAME }}:${{ secrets.BBS_PASSWORD }}@localhost:7990/scm/proj/${{ matrix.repository }}.git --mirror
-          cd ${{ matrix.repository }}
+          cd ${{ matrix.repository }}.git
           git remote add github "https://{{ secrets.GH_PAT }}@github.com/jgonzalez-clevermig-test/${{ matrix.repository }}.git"
           git push github --mirror
 
