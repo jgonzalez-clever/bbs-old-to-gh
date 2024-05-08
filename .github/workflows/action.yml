@@ -47,12 +47,11 @@ jobs:
       - name: Pull request
         run: |
           curl -X GET \
-          http://localhost:7990/rest/api/latest/projects/{{ item.bbs_project_id }}/repos/{{ item.bbs_repository_name }}/pull-requests \
+          http://localhost:7990/rest/api/latest/projects/${{ matrix.project }}/repos/repo-test/pull-requests \
           -H 'Accept: application/json' \
-          -H 'Authorization: Bearer {{ bbs_token }}' \
+          -H 'Authorization: Bearer ${{ secrets.BBS_TOKEN }}' \
           -o bbs_pullrequest.json
-
-
+          
       - name: Clone BitBucket Repository {{ item.bbs_repository_name }}
         run: git clone http://admin:${{ secrets.BBS_TOKEN }}@localhost:7990/scm/${{ matrix.project }}/repo-test.git
 
