@@ -62,10 +62,6 @@ jobs:
 
         run:
           echo "${{ env.ORGORIGEN }} to ${{ env.ORGTARGET }}"
-
-      - name: CREATE RUNNER ARTIFACT FOLDER
-        run: |
-          mkdir ../MIGRATION-${{ github.run_number }}
           
       - name: Check if repository exists
         run: |
