@@ -40,11 +40,12 @@ jobs:
           BBS_USERNAME: ${{ secrets.BBS_USERNAME }}
           BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
           BBS_TOKEN: ${{ secrets.BBS_TOKEN }}
-          OWNER: ${{ needs.Get-Repositories-To-Inject.outputs.OWNER }}
+          OWNER: ${{ needs.Get-Repositories-to-Migrate.outputs.OWNER }}
           
         run: |
           ls
           echo "${{ env.OWNER }}"
+
 
       - name: Pull request
         run: |
