@@ -30,7 +30,8 @@ jobs:
     strategy:
       max-parallel: 1
       # SET MATRIX WITH PROJECTS TO MIGRATE
-      matrix: ${{ needs.Get-Repositories-to-Migrate.outputs.REPOSITORIES }}
+      matrix:
+        repository: ${{fromJson(needs.Get-Repositories-to-Migrate.outputs.REPOSITORIES)}}
       
     steps:
       - name: Checkout to repository
