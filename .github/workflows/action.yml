@@ -40,6 +40,7 @@ jobs:
           BBS_USERNAME: ${{ secrets.BBS_USERNAME }}
           BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
           BBS_TOKEN: ${{ secrets.BBS_TOKEN }}
+          
         run: |
           ls
           echo "${{ matrix.project }}"
@@ -53,6 +54,6 @@ jobs:
           -o bbs_pullrequest.json
           
       - name: Clone BitBucket Repository {{ item.bbs_repository_name }}
-        run: git clone http://localhost:7990/scm/${{ matrix.project }}/repo-test.git
+        run: git clone http://${{ secrets.BBS_USERNAME }}:${{ secrets.BBS_PASSWORD }}@localhost:7990/scm/proj/repo-test.git
 
           
