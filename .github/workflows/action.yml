@@ -39,7 +39,7 @@ jobs:
           GH_PAT: ${{ secrets.GH_PAT }}
           BBS_USERNAME: ${{ secrets.BBS_USERNAME }}
           BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
-          BBS_TOKEN: ${{ secrets.BBS_TOKEN }
+          BBS_TOKEN: ${{ secrets.BBS_TOKEN }}
         run: |
           ls
           echo "${{ matrix.project }}"
