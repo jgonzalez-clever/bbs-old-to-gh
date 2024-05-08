@@ -137,7 +137,8 @@ jobs:
           # Update report
           ls
           pwd
-          sed -i "${index} s/^\(\([^,]*,\)\{2\}\)[^,]*/\1${default_branch}\//" ../repos-${{ github.run_number }}.csv
+          sed -i "${index} s/^\(\([^,]*,\)\{2\}\)[^,]*/\1${default_branch}/" ../repos-${{ github.run_number }}.csv
+
       
       - name: Clean runner
         run: |
