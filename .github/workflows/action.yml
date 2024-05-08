@@ -39,9 +39,21 @@ jobs:
           GH_PAT: ${{ secrets.GH_PAT }}
           BBS_USERNAME: ${{ secrets.BBS_USERNAME }}
           BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
-          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
-          PATH_WORK: ${{ vars.PATH_WORK }}
-        
+          BBS_TOKEN: ${{ secrets.BBS_TOKEN }
         run: |
           ls
           echo "${{ matrix.project }}"
+
+      - name: Pull request
+        run: |
+          curl -X GET \
+          http://localhost:7990/rest/api/latest/projects/{{ item.bbs_project_id }}/repos/{{ item.bbs_repository_name }}/pull-requests \
+          -H 'Accept: application/json' \
+          -H 'Authorization: Bearer {{ bbs_token }}' \
+          -o bbs_pullrequest.json
+
+
+      - name: Clone BitBucket Repository {{ item.bbs_repository_name }}
+        run: git clone http://admin:${{ secrets.BBS_TOKEN }@localhost:7990/scm/${{ matrix.project }}/repo-test.git
+
+          
