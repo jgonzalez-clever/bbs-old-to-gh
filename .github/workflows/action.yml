@@ -97,6 +97,25 @@ jobs:
           git remote add github "https://${{ secrets.GH_PAT }}@github.com/${{ env.ORGTARGET }}/${{ matrix.repository }}.git"
           git push github --mirror
 
+      - name: Set default branch
+        run: |
+          # Definir la URL de la solicitud GET
+          url="http://localhost:7990/rest/api/1.0/projects/${{ env.ORGORIGEN }}/repos/${{ matrix.repository }}/branches/default"
+          
+          # Realizar la solicitud GET con curl y almacenar la respuesta en una variable
+          response=$(curl -s -H "Accept: application/json" -H "Authorization: Bearer ${{ secrets.BBS_TOKEN }}" "${url}")
+          
+          # Extraer el nombre del branch predeterminado usando jq y guardarlo en una variable
+          default_branch=$(echo "${response}" | jq -r '.displayId')
+          
+          # Imprimir el nombre del branch predeterminado
+          echo "Default Branch: ${default_branch}"
+
+          
+          response=$(curl -s -X PATCH -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
+          -d "{\"default_branch\": \"${default_branch}\"}" "https://api.github.com/repos/${{ env.ORGTARGET }}/${{ matrix.repository }}")
+      
       - name: Clean runner
         run: |
           shopt -s dotglob
