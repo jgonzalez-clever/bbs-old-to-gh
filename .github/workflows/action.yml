@@ -108,9 +108,12 @@ jobs:
           git push github --mirror
           if [ $? -eq 0 ]; then
             echo "Push successful"
+            echo "$index ${index}"
+            index=$(wc -l < ../../repos-${{ github.run_number }}.csv)
             sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Successful\//" ../../repos-${{ github.run_number }}.csv
             exit 0
           else
+            index=$(wc -l < ../../repos-${{ github.run_number }}.csv)
             sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Push-Failed\//" ../../repos-${{ github.run_number }}.csv
             exit 0
             echo "Push failed"
@@ -135,8 +138,7 @@ jobs:
           -d "{\"default_branch\": \"${default_branch}\"}" "https://api.github.com/repos/${{ env.ORGTARGET }}/${{ matrix.repository }}")
 
           # Update report
-          ls
-          pwd
+          index=$(wc -l < ../repos-${{ github.run_number }}.csv)
           sed -i "${index} s/^\(\([^,]*,\)\{2\}\)[^,]*/\1${default_branch}/" ../repos-${{ github.run_number }}.csv
 
       
