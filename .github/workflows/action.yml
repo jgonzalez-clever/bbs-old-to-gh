@@ -55,6 +55,10 @@ jobs:
 
         run:
           echo "${{ env.ORGORIGEN }} to ${{ env.ORGTARGET }}"
+
+      - name: CREATE RUNNER ARTIFACT FOLDER
+        run: |
+          mkdir ../MIGRATION-${{ github.run_number }}
           
       - name: Check if repository exists
         run: |
@@ -127,4 +131,8 @@ jobs:
           rm -rf ./*
           shopt -u dotglob
 
-          
+      - name: Upload to artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LOG Outputs MIGRATION-${{ github.run_number }}
+          path: /home/julimax/Desktop/runner2/actions-runner/_work/bbs-old-to-gh/MIGRATION-${{ github.run_number }}/*       
