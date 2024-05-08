@@ -1,5 +1,6 @@
 {
     "owner" : "jgonzalez-clever",
+    "orgtarget": "jgonzalez-clevermig-test",
     "repositories": [ 
       {
         "repo_name": "repo-test"
