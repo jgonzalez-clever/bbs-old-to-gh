@@ -19,7 +19,7 @@ jobs:
         
       steps:
         - name: Checkout to repository
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
        
         - name: Set matrix data
           id: set-matrix
@@ -51,12 +51,13 @@ jobs:
       GH_PAT: ${{ secrets.GH_PAT }}
       BBS_USERNAME: ${{ secrets.BBS_USERNAME }}
       BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
+      BBS_URL: ${{ secrets.BBS_URL }}
       BBS_TOKEN: ${{ secrets.BBS_TOKEN }}
       ORGORIGEN: ${{ needs.Get-Repositories-to-Migrate.outputs.ORGORIGEN }}
       ORGTARGET: ${{ needs.Get-Repositories-to-Migrate.outputs.ORGTARGET }}
     steps:
       - name: Checkout to repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
               
       - name: Migration
 
@@ -72,24 +73,24 @@ jobs:
             # Verificar el código de respuesta
             if [ "$response" -eq 200 ]; then
               echo "El repositorio ${{ env.ORGTARGET }}/${{ matrix.repository }} existe."
+              index=$(wc -l < ../repos-${{ github.run_number }}.csv)
               sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Fail-repo-exist\//" ../repos-${{ github.run_number }}.csv
               exit 1  # Salir con un código de error
             else
               echo "El repositorio ${{ env.ORGTARGET }}/${{ matrix.repository }} no existe."
-              
             fi
 
       #- name: Pull request
       #  run: |
       #    curl -X GET \
-      #    http://localhost:7990/rest/api/latest/projects/${{ env.ORGORIGEN }}/repos/repo-test/pull-requests \
+      #    http://${{ secrets.BBS_URL }}/rest/api/latest/projects/${{ env.ORGORIGEN }}/repos/repo-test/pull-requests \
       #    -H 'Accept: application/json' \
       #    -H 'Authorization: Bearer ${{ secrets.BBS_TOKEN }}' \
       #    -o bbs_pullrequest.json
           
       - name: Clone BitBucket Repository ${{ matrix.repository }}
         run: |
-          git clone http://${{ secrets.BBS_USERNAME }}:${{ secrets.BBS_PASSWORD }}@localhost:7990/scm/${{ env.ORGORIGEN }}/${{ matrix.repository }}.git --mirror
+          git clone http://${{ secrets.BBS_USERNAME }}:${{ secrets.BBS_PASSWORD }}@${{ secrets.BBS_URL }}/scm/${{ env.ORGORIGEN }}/${{ matrix.repository }}.git --mirror
 
       - name: Create repository on Github
         run: |
@@ -108,7 +109,6 @@ jobs:
           git push github --mirror
           if [ $? -eq 0 ]; then
             echo "Push successful"
-            echo "$index ${index}"
             index=$(wc -l < ../../repos-${{ github.run_number }}.csv)
             sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Successful\//" ../../repos-${{ github.run_number }}.csv
             exit 0
@@ -123,7 +123,7 @@ jobs:
       - name: Set default branch
         run: |
           # Definir la URL de la solicitud GET
-          url="http://localhost:7990/rest/api/1.0/projects/${{ env.ORGORIGEN }}/repos/${{ matrix.repository }}/branches/default"
+          url="http://${{ secrets.BBS_URL }}/rest/api/1.0/projects/${{ env.ORGORIGEN }}/repos/${{ matrix.repository }}/branches/default"
           
           # Realizar la solicitud GET con curl y almacenar la respuesta en una variable
           response=$(curl -s -H "Accept: application/json" -H "Authorization: Bearer ${{ secrets.BBS_TOKEN }}" "${url}")
@@ -143,6 +143,7 @@ jobs:
 
       
       - name: Clean runner
+        if: always()
         run: |
           shopt -s dotglob
           rm -rf ./*
