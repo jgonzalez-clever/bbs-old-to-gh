@@ -7,7 +7,7 @@ jobs:
       runs-on: ubuntu-latest
       outputs:
         REPOSITORIES: ${{ steps.set-matrix.outputs.REPO }}
-        OWNER: ${{ steps.set-owner.outputs.OW}}
+        ORGORIGEN: ${{ steps.set-orgorigen.outputs.OW}}
         ORGTARGET: ${{ steps.set-orgtarget.outputs.ORGTAR }}
         
       steps:
@@ -20,13 +20,13 @@ jobs:
             echo "REPO=$(jq -c -r '.repositories | map(.repo_name)' < ./repositories.json)" >> $GITHUB_OUTPUT 
             echo "$REPO"
             
-        - name: Set owner
-          id: set-owner
+        - name: Set org origen
+          id: set-orgorigen
           run: |
-            echo "OW=$(jq -r '.owner' repositories.json)" >> $GITHUB_OUTPUT 
+            echo "OW=$(jq -r '.orgorigen' repositories.json)" >> $GITHUB_OUTPUT 
             echo "$OW"
 
-        - name: Set owner
+        - name: Set org target
           id: set-orgtarget
           run: |
             echo "ORGTAR=$(jq -r '.orgtarget' repositories.json)" >> $GITHUB_OUTPUT 
@@ -45,7 +45,7 @@ jobs:
       BBS_USERNAME: ${{ secrets.BBS_USERNAME }}
       BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
       BBS_TOKEN: ${{ secrets.BBS_TOKEN }}
-      OWNER: ${{ needs.Get-Repositories-to-Migrate.outputs.OWNER }}
+      ORGORIGEN: ${{ needs.Get-Repositories-to-Migrate.outputs.ORGORIGEN }}
       ORGTARGET: ${{ needs.Get-Repositories-to-Migrate.outputs.ORGTARGET }}
     steps:
       - name: Checkout to repository
@@ -54,7 +54,7 @@ jobs:
       - name: Migration
 
         run:
-          echo "${{ env.OWNER }} to ${{ env.ORGTARGET }}"
+          echo "${{ env.ORGORIGEN }} to ${{ env.ORGTARGET }}"
           
       - name: Check if repository exists
         run: |
@@ -72,14 +72,14 @@ jobs:
       #- name: Pull request
       #  run: |
       #    curl -X GET \
-      #    http://localhost:7990/rest/api/latest/projects/${{ env.OWNER }}/repos/repo-test/pull-requests \
+      #    http://localhost:7990/rest/api/latest/projects/${{ env.ORGORIGEN }}/repos/repo-test/pull-requests \
       #    -H 'Accept: application/json' \
       #    -H 'Authorization: Bearer ${{ secrets.BBS_TOKEN }}' \
       #    -o bbs_pullrequest.json
           
       - name: Clone BitBucket Repository {{ item.bbs_repository_name }}
         run: |
-          git clone http://${{ secrets.BBS_USERNAME }}:${{ secrets.BBS_PASSWORD }}@localhost:7990/scm/proj/${{ matrix.repository }}.git --mirror
+          git clone http://${{ secrets.BBS_USERNAME }}:${{ secrets.BBS_PASSWORD }}@localhost:7990/scm/${{ env.ORGORIGEN }}/${{ matrix.repository }}.git --mirror
 
       - name: Crate repository on Github
         run: |
