@@ -72,9 +72,10 @@ jobs:
             # Verificar el código de respuesta
             if [ "$response" -eq 200 ]; then
               echo "El repositorio ${{ env.ORGTARGET }}/${{ matrix.repository }} existe."
+              sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Fail-repo-exist\//" ../repos-${{ github.run_number }}.csv
               exit 1  # Salir con un código de error
             else
-              echo "Error: El repositorio ${{ env.ORGTARGET }}/${{ matrix.repository }} no existe."
+              echo "El repositorio ${{ env.ORGTARGET }}/${{ matrix.repository }} no existe."
               
             fi
 
@@ -107,6 +108,7 @@ jobs:
           git push github --mirror
           if [ $? -eq 0 ]; then
             echo "Push successful"
+            sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Successful\//" ../repos-${{ github.run_number }}.csv
             exit 0
           else
             echo "Push failed"
