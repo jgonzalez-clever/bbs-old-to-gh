@@ -81,7 +81,7 @@ jobs:
         run: |
           git clone http://${{ secrets.BBS_USERNAME }}:${{ secrets.BBS_PASSWORD }}@localhost:7990/scm/${{ env.ORGORIGEN }}/${{ matrix.repository }}.git --mirror
 
-      - name: Crate repository on Github
+      - name: Create repository on Github
         run: |
           curl -L \
             -X POST \
