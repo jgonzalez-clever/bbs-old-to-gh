@@ -4,23 +4,23 @@ on:
   
 jobs: 
   Get-Repositories-to-Migrate:
-    # Specifies the operating system environment on which the workflow will run.
-    # In this case, it is set to "ubuntu-latest", which indicates the latest version of Ubuntu.
-    runs-on: ubuntu-latest
- 
-    # CONFIGURE PROJECT MATRIX
-    outputs:
-      # SET PROJECTS OUTPUT FROM SET-MATRIX STEP
-      PROJECTS: ${{ steps.set-matrix.outputs.PROJECTS }}
-    
-    steps:
-      - name: Checkout to repository
-        uses: actions/checkout@v3
-     
-      - name: Set matrix data
-        id: set-matrix
-        # STORE PROJECTS.JSON INTO PROJECTS VARIABLE
-        run: echo "PROJECTS=$(jq -c . < ./projects.json)" >> $GITHUB_OUTPUT
+      runs-on: ubuntu-latest
+      outputs:
+        REPOSITORIES: ${{ steps.set-matrix.outputs.REPO }}
+        OWNER: ${{ steps.set-owner.outputs.OW}}
+        
+      steps:
+        - name: Checkout to repository
+          uses: actions/checkout@v3
+       
+        - name: Set matrix data
+          id: set-matrix
+          run: echo "REPO=$(jq -c -r '.repositories | map(.repo_name)' < ./repositories.json)" >> $GITHUB_OUTPUT 
+
+        - name: Set owner
+          id: set-owner
+          run: echo "OW=$(jq -r '.owner' repositories.json)" >> $GITHUB_OUTPUT 
+
         
   Migration:
     runs-on: [ 'self-hosted' , 'Linux' , 'X64' ]
@@ -28,7 +28,7 @@ jobs:
     strategy:
       max-parallel: 1
       # SET MATRIX WITH PROJECTS TO MIGRATE
-      matrix: ${{ fromJson(needs.Get-Repositories-to-Migrate.outputs.PROJECTS) }}
+      matrix: ${{ fromJson(needs.Get-Repositories-to-Migrate.outputs.REPO) }}
       
     steps:
       - name: Checkout to repository
@@ -40,15 +40,16 @@ jobs:
           BBS_USERNAME: ${{ secrets.BBS_USERNAME }}
           BBS_PASSWORD: ${{ secrets.BBS_PASSWORD }}
           BBS_TOKEN: ${{ secrets.BBS_TOKEN }}
+          OWNER: ${{ needs.Get-Repositories-To-Inject.outputs.OWNER }}
           
         run: |
           ls
-          echo "${{ matrix.project }} index: ${{ matrix.job-index }}"
+          echo "${{ env.OWNER }}"
 
       - name: Pull request
         run: |
           curl -X GET \
-          http://localhost:7990/rest/api/latest/projects/${{ matrix.project }}/repos/repo-test/pull-requests \
+          http://localhost:7990/rest/api/latest/projects/${{ env.OWNER }}/repos/repo-test/pull-requests \
           -H 'Accept: application/json' \
           -H 'Authorization: Bearer ${{ secrets.BBS_TOKEN }}' \
           -o bbs_pullrequest.json
