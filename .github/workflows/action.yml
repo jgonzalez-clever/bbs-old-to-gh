@@ -91,15 +91,13 @@ jobs:
           cat bbs_pullrequest.json
 
           cat bbs_pullrequest.json | jq -r '.values[] | 
-          .title as $title | 
-          .description as $body | 
-          .fromRef.displayId as $head | 
-          .toRef.displayId as $base | 
-          "curl -s -X POST -H \"Accept: application/vnd.github.v3+json\" |
-          -H \"Authorization: Bearer ${{ secrets.GH_PAT }}\" |
-          -d \"{\\\"title\\\": \\\"\($title)\\\", \\\"body\\\": \\\"\($body)\\\", \\\"head\\\": \\\"\($head)\\\", \\\"base\\\": \\\"\($base)\\\"}\" |
-          https://api.github.com/repos/${{ env.ORGTARGET }}/${{ matrix.repository }}/pulls"'
-        
+            .title as $title | 
+            .description as $body | 
+            .fromRef.displayId as $head | 
+            .toRef.displayId as $base | 
+            "curl -s -X POST -H \"Accept: application/vnd.github.v3+json\" -H \"Authorization: Bearer ${{ secrets.GH_PAT }}\" -d \"{\\\"title\\\": \\\"\($title)\\\", \\\"body\\\": \\\"\($body)\\\", \\\"head\\\": \\\"\($head)\\\", \\\"base\\\": \\\"\($base)\\\"}\" https://api.github.com/repos/${{ env.ORGTARGET }}/${{ matrix.repository }}/pulls"'
+          
+                  
 
           #curl -L \
           #-X POST \
