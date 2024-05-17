@@ -102,15 +102,15 @@ jobs:
           git remote add github "https://${{ secrets.GH_PAT }}@github.com/${{ env.ORGTARGET }}/${{ matrix.repository }}.git"
           git push github --mirror
           if [ $? -eq 0 ]; then
-            echo "Push successful"
-            index=$(wc -l < ../../repos-${{ github.run_number }}.csv)
-            sed -i "${index} s/^\(\([^,]*,\)\{4\}\)[^,]*/\1Successful\//" ../../repos-${{ github.run_number }}.csv
-            exit 0
+              echo "Push successful"
+              index=$(wc -l < ../../repos-${{ github.run_number }}.csv)
+              sed -i "${index} s/^\(\([^,]*,\)\{4\}\)[^,]*/\1Successful\//" ../../repos-${{ github.run_number }}.csv
+              exit 0
           else
-            echo "Push failed"
-            index=$(wc -l < ../../repos-${{ github.run_number }}.csv)
-            sed -i "${index} s/^\(\([^,]*,\)\{4\}\)[^,]*/\1Push-Failed\//" ../../repos-${{ github.run_number }}.csv
-            exit 1
+              index=$(wc -l < ../../repos-${{ github.run_number }}.csv)
+              sed -i "${index} s/^\(\([^,]*,\)\{4\}\)[^,]*/\1Push-Failed\//" ../../repos-${{ github.run_number }}.csv
+              echo "Push failed"
+              exit 1
           fi
 
       - name: Set default branch
