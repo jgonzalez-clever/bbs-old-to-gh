@@ -154,6 +154,7 @@ jobs:
            
           # Update report
           index=$(wc -l < ../repos-${{ github.run_number }}.csv)
+          echo "$index"
           sed -i "${index} s/^\(\([^,]*,\)\{4\}\)[^,]*/\1${num_pull_requests}/" ../repos-${{ github.run_number }}.csv  
 
           sed -i "${index} s/^\(\([^,]*,\)\{5\}\)[^,]*/\1full_migrated/" ../repos-${{ github.run_number }}.csv
