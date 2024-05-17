@@ -154,14 +154,18 @@ jobs:
           num_pull_requests=$(cat bbs_pullrequest.json | jq -r '.size')
 
           echo "pr open $num_pull_requests"
-
-          ls
+          
+          index=$(wc -l < ../repos-${{ github.run_number }}.csv)
+          un_number=${{ github.run_number }}
+          open_pr=${num_pull_requests}
+          awk -v index="$index" -v open_pr="$open_pr" run_number="$run_number" 'BEGIN{FS=OFS=","} NR==index {$5=run_number} {print}' ../repos-${open_pr}.csv > temp.csv && mv temp.csv ../repos-${run_number}.csv
+          awk -v index="$index" -v run_number="$run_number" 'BEGIN{FS=OFS=","} NR==index {$6="Full"} {print}' ../repos-${open_pr}.csv > temp.csv && mv temp.csv ../repos-${run_number}.csv
            
           # Update report
-          index=$(wc -l < ../repos-${{ github.run_number }}.csv)
+          
           echo "$index"
-          sed -i "${index} s/^\(\([^,]*,\)\{4\}\)[^,]*/\1${num_pull_requests}/" ../repos-${{ github.run_number }}.csv  
-          sed -i "${index} s/^\(\([^,]*,\)\{5\}\)[^,]*/\1full_migrated/" ../repos-${{ github.run_number }}.csv
+          #sed -i "${index} s/^\(\([^,]*,\)\{4\}\)[^,]*/\1${num_pull_requests}/" ../repos-${{ github.run_number }}.csv  
+          #sed -i "${index} s/^\(\([^,]*,\)\{5\}\)[^,]*/\1full_migrated/" ../repos-${{ github.run_number }}.csv
 
           #curl -L \
           #-X POST \
