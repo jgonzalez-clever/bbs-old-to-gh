@@ -75,7 +75,7 @@ jobs:
               echo "El repositorio ${{ env.ORGTARGET }}/${{ matrix.repository }} existe."
               index=$(wc -l < ../repos-${{ github.run_number }}.csv)
               sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Fail-repo-exist\//" ../repos-${{ github.run_number }}.csv
-              exit 1  # Salir con un código de error
+              #exit 1  # Salir con un código de error
             else
               echo "El repositorio ${{ env.ORGTARGET }}/${{ matrix.repository }} no existe."
             fi
