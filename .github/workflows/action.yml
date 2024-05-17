@@ -83,7 +83,7 @@ jobs:
       - name: Pull request
         run: |
           curl -X GET \
-          http://${{ secrets.BBS_URL }}/rest/api/latest/projects/${{ env.ORGORIGEN }}/repos/repo-test/pull-requests \
+          http://${{ secrets.BBS_URL }}/rest/api/latest/projects/${{ env.ORGORIGEN }}/repos/${{ matrix.repository }}/pull-requests \
           -H 'Accept: application/json' \
           -H 'Authorization: Bearer ${{ secrets.BBS_TOKEN }}' \
           -o bbs_pullrequest.json
