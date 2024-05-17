@@ -87,6 +87,7 @@ jobs:
           -H 'Accept: application/json' \
           -H 'Authorization: Bearer ${{ secrets.BBS_TOKEN }}' \
           -o bbs_pullrequest.json
+          cat bbs_pullrequest.json
           
       - name: Clone BitBucket Repository ${{ matrix.repository }}
         run: |
