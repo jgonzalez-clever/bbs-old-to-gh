@@ -104,7 +104,9 @@ jobs:
           if [ $? -eq 0 ]; then
               echo "Push successful"
               index=$(wc -l < ../../repos-${{ github.run_number }}.csv)
-              sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Successful\/" ../../repos-${{ github.run_number }}.csv
+              "sed -i "${index} s/^\(\([^,]*,\)\{3\}\)[^,]*/\1Successful\/" ../../repos-${{ github.run_number }}.csv
+              sed -i "${index}"'s/^\(\([^;]*;\)\{3\}\)[^;]*/\1Successful/' ../../repos-"${{ github.run_number }}".csv
+
               exit 0
           else
               index=$(wc -l < ../../repos-${{ github.run_number }}.csv)
