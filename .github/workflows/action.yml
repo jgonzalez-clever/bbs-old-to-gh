@@ -158,7 +158,7 @@ jobs:
           index_line=$(wc -l < ../repos-${{ github.run_number }}.csv)
           run_number=${{ github.run_number }}
           open_pr=${num_pull_requests}
-          awk -v index_line="$index_line" -v open_pr="$open_pr" run_number="$run_number" 'BEGIN{FS=OFS=","} NR==index_line {$5=run_number} {print}' ../repos-${run_number}.csv > temp.csv && mv temp.csv ../repos-${run_number}.csv
+          awk -v index_line="$index_line" -v open_pr=$open_pr run_number="$run_number" 'BEGIN{FS=OFS=","} NR==index_line {$5=run_number} {print}' ../repos-${run_number}.csv > temp.csv && mv temp.csv ../repos-${run_number}.csv
           awk -v index_line="$index_line" -v run_number="$run_number" 'BEGIN{FS=OFS=","} NR==index_line {$6="Full"} {print}' ../repos-${run_number}.csv > temp.csv && mv temp.csv ../repos-${run_number}.csv
            
           # Update report
