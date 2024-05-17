@@ -152,6 +152,10 @@ jobs:
             "curl -s -X POST -H \"Accept: application/vnd.github.v3+json\" -H \"Authorization: Bearer ${{ secrets.GH_PAT }}\" -d \"{\\\"title\\\": \\\"\($title)\\\", \\\"body\\\": \\\"\($body)\\\", \\\"head\\\": \\\"\($head)\\\", \\\"base\\\": \\\"\($base)\\\"}\" https://api.github.com/repos/${{ env.ORGTARGET }}/${{ matrix.repository }}/pulls"' | sh
 
           num_pull_requests=$(cat bbs_pullrequest.json | jq -r '.size')
+
+          echo "pr open $num_pull_requests"
+
+          ls
            
           # Update report
           index=$(wc -l < ../repos-${{ github.run_number }}.csv)
