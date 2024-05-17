@@ -80,13 +80,13 @@ jobs:
               echo "El repositorio ${{ env.ORGTARGET }}/${{ matrix.repository }} no existe."
             fi
 
-      #- name: Pull request
-      #  run: |
-      #    curl -X GET \
-      #    http://${{ secrets.BBS_URL }}/rest/api/latest/projects/${{ env.ORGORIGEN }}/repos/repo-test/pull-requests \
-      #    -H 'Accept: application/json' \
-      #    -H 'Authorization: Bearer ${{ secrets.BBS_TOKEN }}' \
-      #    -o bbs_pullrequest.json
+      - name: Pull request
+        run: |
+          curl -X GET \
+          http://${{ secrets.BBS_URL }}/rest/api/latest/projects/${{ env.ORGORIGEN }}/repos/repo-test/pull-requests \
+          -H 'Accept: application/json' \
+          -H 'Authorization: Bearer ${{ secrets.BBS_TOKEN }}' \
+          -o bbs_pullrequest.json
           
       - name: Clone BitBucket Repository ${{ matrix.repository }}
         run: |
@@ -103,6 +103,7 @@ jobs:
             -d '{"name":"${{ matrix.repository }}","private":true}'
 
       - name: Push repository to Github
+        if: 1 == 0
         run: |
           cd ${{ matrix.repository }}.git
           git remote add github "https://${{ secrets.GH_PAT }}@github.com/${{ env.ORGTARGET }}/${{ matrix.repository }}.git"
@@ -121,6 +122,7 @@ jobs:
           fi
 
       - name: Set default branch
+        if: 1 == 0
         run: |
           # Definir la URL de la solicitud GET
           url="http://${{ secrets.BBS_URL }}/rest/api/1.0/projects/${{ env.ORGORIGEN }}/repos/${{ matrix.repository }}/branches/default"
