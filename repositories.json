@@ -3,10 +3,7 @@
     "orgtarget": "jgonzalez-clevermig-test",
     "repositories": [ 
       {
-        "repo_name": "repo-test"
-      },
-      {
-        "repo_name": "repo-test2"
+        "repo_name": "repo1"
       }
     ]
 }
